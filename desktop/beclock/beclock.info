@@ -1,0 +1,7 @@
+PRGNAM="beclock"
+VERSION="0.18"
+DOWNLOAD="http://kde-apps.org/CONTENT/content-files/117542-beclock-kwin-fx-0.18.txz"
+MD5SUM="7a2286008e692af62a55b8da4e5629f5"
+MAINTAINER="nikita_timofeev"
+EMAIL="ndtimofeev@gmail.com"
+APPROVED="nikita_timofeev"
