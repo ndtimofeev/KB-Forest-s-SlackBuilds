@@ -1,5 +1,5 @@
 PRGNAM="ghc"
-VERSION="7.0.3"
+VERSION="7.4.1"
 HOMEPAGE="http://haskell.org/ghc/"
 DOWNLOAD="http://haskell.org/ghc/dist/7.4.1/ghc-7.4.1-src.tar.bz2"
 MD5SUM="5d86c420978b49cc60edea9bd4c36703"
