@@ -3,9 +3,8 @@
 # Slackware build script for cabal-dev
 
 PRGNAM=cabal-dev
-VERSION=${VERSION:-0.9.1}
+VERSION=${VERSION:-$(cabal install --dry-run cabal-dev | tail +3 | grep cabal-dev | sed -ne 's/^.*-\([0-9.]\+\)$/\1/p')}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -16,7 +15,7 @@ if [ -z "$ARCH" ]; then
 fi
 
 CWD=$(pwd)
-TMP=${TMP:-/tmp/kbles}
+TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
@@ -40,30 +39,56 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
+mkdir $PRGNAM-$VERSION
 cd $PRGNAM-$VERSION
-chown -R root:root .
-find . \
- \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) \
- -exec chmod 755 {} \; -o \
- \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) \
- -exec chmod 644 {} \;
+
+# chown -R root:root .
+# find . \
+#  \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) \
+#  -exec chmod 755 {} \; -o \
+#  \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) \
+#  -exec chmod 644 {} \;
+
+PACKAGE_DB="$(pwd)/cabal/package-conf.d"
+
+ghc-pkg init $PACKAGE_DB
+
+
+for str in $(cabal install --dry-run cabal-dev-$VERSION | tail +3 | grep -v cabal-dev); do
+    wget http://hackage.haskell.org/packages/archive/$(echo $str | sed -ne 's/^\(.*\)-\([0-9\.]\+\)$/\1\/\2/p')/$str.tar.gz
+    tar xvf $str.tar.gz
+    ( cd $str
+    cabal configure \
+        --package-db=$PACKAGE_DB \
+        --enable-split-objs \
+        --prefix=$TMP/$PRGNAM-$VERSION/cabal
+    cabal build
+    cabal install \
+        --prefix=$TMP/$PRGNAM-$VERSION/cabal \
+        --package-db=$PACKAGE_DB
+    )
+done
+
+wget http://hackage.haskell.org/packages/archive/$PRGNAM/$VERSION/$PRGNAM-$VERSION.tar.gz
+tar xvf $PRGNAM-$VERSION.tar.gz
+cd $PRGNAM-$VERSION
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-runhaskell Setup.hs configure \
-  --prefix=/usr \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --ghc-options="-threaded -dynamic"
+cabal configure \
+    --prefix=/usr \
+    --docdir=/usr/doc/$PRGNAM-$VERSION \
+    --package-db=$PACKAGE_DB \
+    --enable-split-objs
 
-runghc Setup build
-runghc Setup copy --destdir=$PKG
+
+cabal build
+cabal copy --destdir=$PKG
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a ANNOUNCE CHANGES README TODO $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install

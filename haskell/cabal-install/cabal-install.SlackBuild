@@ -54,7 +54,6 @@ find . \
 chmod +x ./bootstrap.sh
 ghc-pkg init "$(pwd)/cabal/package-conf.d"
 
-# Force generic for haskell-citeproc-hs.
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 EXTRA_CONFIGURE_OPTS="--package-db=$(pwd)/cabal/package-conf.d/" \
