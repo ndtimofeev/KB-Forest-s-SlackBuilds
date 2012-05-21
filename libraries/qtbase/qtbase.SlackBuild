@@ -88,7 +88,7 @@ find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
 mkdir -p $PKG/usr/bin
 ( cd $PKG/usr/lib${LIBDIRSUFFIX}/qt5/bin
   for file in * ; do
-    ( cd $PKG/usr/bin ; ln -sf /usr/lib${LIBDIRSUFFIX}/qt/bin/$file $file-qt5 )
+    ( cd $PKG/usr/bin ; ln -sf /usr/lib${LIBDIRSUFFIX}/qt5/bin/$file $file-qt5 )
   done
 )
 

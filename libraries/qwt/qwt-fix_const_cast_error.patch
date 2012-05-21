@@ -1,0 +1,19 @@
+diff -Naur qwt.orig/src/qwt_plot_canvas.cpp qwt/src/qwt_plot_canvas.cpp
+--- qwt.orig/src/qwt_plot_canvas.cpp	2012-05-21 01:58:24.867669862 +0400
++++ qwt/src/qwt_plot_canvas.cpp	2012-05-21 02:01:02.490699302 +0400
+@@ -262,10 +262,13 @@
+ {
+     if ( path.elementCount() == 4 )
+     {
++        const QPainterPath::Element &const_ref_el0 = path.elementAt(0);
+         QPainterPath::Element &el0 = 
+-            const_cast<QPainterPath::Element &>( path.elementAt(0) );
++            const_cast<QPainterPath::Element &>( const_ref_el0 );
++
++        const QPainterPath::Element &const_ref_el2 = path.elementAt(3);
+         QPainterPath::Element &el2 = 
+-            const_cast<QPainterPath::Element &>( path.elementAt(3) );
++            const_cast<QPainterPath::Element &>( const_ref_el2 );
+ 
+         qSwap( el0.x, el2.x );
+         qSwap( el0.y, el2.y );

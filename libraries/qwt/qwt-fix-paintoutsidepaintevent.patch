@@ -1,0 +1,13 @@
+diff -Naur qwt.orig/src/qwt_plot_directpainter.cpp qwt/src/qwt_plot_directpainter.cpp
+--- qwt.orig/src/qwt_plot_directpainter.cpp	2012-05-20 22:17:12.708594682 +0400
++++ qwt/src/qwt_plot_directpainter.cpp	2012-05-20 22:31:14.405072027 +0400
+@@ -197,8 +197,7 @@
+     }
+ 
+     bool immediatePaint = true;
+-    if ( !canvas->testAttribute( Qt::WA_WState_InPaintEvent ) &&
+-        !canvas->testAttribute( Qt::WA_PaintOutsidePaintEvent ) )
++    if ( !canvas->testAttribute( Qt::WA_WState_InPaintEvent ) )
+     {
+         immediatePaint = false;
+     }

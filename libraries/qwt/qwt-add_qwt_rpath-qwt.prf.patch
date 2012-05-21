@@ -1,0 +1,8 @@
+diff -Naur qwt.orig/qwt.prf qwt/qwt.prf
+--- qwt.orig/qwt.prf	2012-05-21 03:54:49.447350600 +0400
++++ qwt/qwt.prf	2012-05-21 04:22:43.282424780 +0400
+@@ -42,3 +42,4 @@
+ # conflict with other installations of qwt
+ 
+ INCLUDEPATH      = $${INCLUDEPATH_QWT}
++QMAKE_LFLAGS += -Wl,-rpath,$${QWT_INSTALL_LIBS}
