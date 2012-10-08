@@ -58,7 +58,7 @@ cd ${PRGNAM}${QT_POSTFIX}
 #  -exec chmod 644 {} \;
 
 
-# patch -p1 < $CWD/qwt-add_qwt_rpath-qwt.prf.patch
+patch -p1 < $CWD/qwt-add_qwt_rpath-qwt.prf.patch
 
 # if [[ $QT = "qt5" ]]; then
 #     patch -p1 < $CWD/qwt-fix-paintoutsidepaintevent.patch

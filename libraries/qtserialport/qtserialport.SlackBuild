@@ -50,7 +50,8 @@ rm -rf ${PRGNAM}${QT_POSTFIX}
 git clone git://gitorious.org/qtplayground/qtserialport.git ${PRGNAM}${QT_POSTFIX}
 cd ${PRGNAM}${QT_POSTFIX}
 
-qmake${QT_POSTFIX} "CONFIG += silent"
+qmake${QT_POSTFIX} "CONFIG += silent" "QT -= gui" -r
+( cd examples; qmake${QT_POSTFIX} "CONFIG += silent" "QT += gui" -r )
 make
 make install INSTALL_ROOT=$PKG
 
