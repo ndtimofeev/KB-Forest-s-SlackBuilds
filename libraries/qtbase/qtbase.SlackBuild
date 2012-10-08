@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PKGNAM=qtbase
-VERSION=${VERSION:-5.0.0}
+VERSION=${VERSION:-5.0.0beta1}
 BUILD=${BUILD:-1}
 
 NUMJOBS=${NUMJOBS:--j7}
@@ -45,9 +45,9 @@ PKG=$TMP/package-${PKGNAM}
 rm -rf $PKG
 mkdir -p $TMP $PKG
 cd $TMP
-rm -rf qtbase
-git clone git://gitorious.org/qt/qtbase.git
-cd qtbase || exit 1
+rm -rf qtbase-opensource-src-5.0.0-beta1
+tar xvf $CWD/qtbase-opensource-src-5.0.0-beta1.tar.xz 
+cd qtbase-opensource-src-5.0.0-beta1
 
 # chown -R root:root .
 # find . \
