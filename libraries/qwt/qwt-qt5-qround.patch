@@ -1,0 +1,42 @@
+diff -Naur qwt.orig/src/qwt_abstract_slider.cpp qwt/src/qwt_abstract_slider.cpp
+--- qwt.orig/src/qwt_abstract_slider.cpp	2012-10-08 17:57:43.454044788 +0400
++++ qwt/src/qwt_abstract_slider.cpp	2012-10-08 18:03:11.817047542 +0400
+@@ -22,12 +22,12 @@
+ {
+     const QwtScaleDiv &sd = slider->scaleDiv();
+ 
+-    const int tValue = qRound( slider->transform( value ) );
++    const int tValue = slider->transform( value );
+ 
+-    if ( tValue == qRound( slider->transform( sd.lowerBound() ) ) )
++    if ( tValue == slider->transform( sd.lowerBound() ) )
+         return sd.lowerBound();
+ 
+-    if ( tValue == qRound( slider->transform( sd.lowerBound() ) ) )
++    if ( tValue == slider->transform( sd.lowerBound() ) )
+         return sd.upperBound();
+ 
+     for ( int i = 0; i < QwtScaleDiv::NTickTypes; i++ )
+@@ -35,7 +35,7 @@
+         const QList<double> ticks = sd.ticks( i );
+         for ( int j = 0; j < ticks.size(); j++ )
+         {
+-            if ( qRound( slider->transform( ticks[ j ] ) ) == tValue )
++            if ( slider->transform( ticks[ j ] ) == tValue )
+                 return ticks[ j ];
+         }
+     }
+diff -Naur qwt.orig/src/qwt_slider.cpp qwt/src/qwt_slider.cpp
+--- qwt.orig/src/qwt_slider.cpp	2012-10-08 17:57:43.456044788 +0400
++++ qwt/src/qwt_slider.cpp	2012-10-08 18:03:54.718047904 +0400
+@@ -526,8 +526,8 @@
+ 
+     p -= d_data->mouseOffset;
+ 
+-    int min = qRound( transform( lowerBound() ) );
+-    int max = qRound( transform( upperBound() ) );
++    int min = transform( lowerBound() );
++    int max = transform( upperBound() );
+     if ( min > max )
+         qSwap( min, max );
+ 
