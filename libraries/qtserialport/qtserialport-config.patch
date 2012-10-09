@@ -1,0 +1,21 @@
+diff -Naur qtserialport.orig/serialport.pro qtserialport/serialport.pro
+--- qtserialport.orig/serialport.pro	2012-10-09 19:19:18.464469137 +0400
++++ qtserialport/serialport.pro	2012-10-09 19:48:48.905483989 +0400
+@@ -1,5 +1,5 @@
+ TEMPLATE = subdirs
+-SUBDIRS = src examples tests
++SUBDIRS = src # examples tests
+ CONFIG += ordered
+ include(doc/doc.pri)
+ 
+diff -Naur qtserialport.orig/src/src.pro qtserialport/src/src.pro
+--- qtserialport.orig/src/src.pro	2012-10-09 19:19:18.461469137 +0400
++++ qtserialport/src/src.pro	2012-10-09 19:49:22.437484275 +0400
+@@ -2,6 +2,7 @@
+ MODULE   = serialport
+ 
+ greaterThan(QT_MAJOR_VERSION, 4) {
++    include( ../modules/qt_serialport.pri )
+     TARGET   = $$QT.serialport.name$$QT_LIBINFIX
+     load(qt_module)
+     load(qt_module_config)
