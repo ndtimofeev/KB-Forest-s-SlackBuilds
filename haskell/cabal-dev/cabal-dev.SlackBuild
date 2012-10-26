@@ -3,7 +3,7 @@
 # Slackware build script for cabal-dev
 
 PRGNAM=cabal-dev
-VERSION=${VERSION:-$(cabal install --dry-run cabal-dev | tail +3 | grep cabal-dev | sed -ne 's/^.*-\([0-9.]\+\)$/\1/p')}
+VERSION=${VERSION:-$(cabal install -v0 --dry-run cabal-dev | tail -1 | sed -ne 's/^.*-\([0-9.]\+\).*$/\1/p')}
 BUILD=${BUILD:-1}
 
 if [ -z "$ARCH" ]; then
@@ -54,8 +54,8 @@ PACKAGE_DB="$(pwd)/cabal/package-conf.d"
 ghc-pkg init $PACKAGE_DB
 
 
-for str in $(cabal install --dry-run cabal-dev-$VERSION | tail +3 | grep -v cabal-dev); do
-    wget http://hackage.haskell.org/packages/archive/$(echo $str | sed -ne 's/^\(.*\)-\([0-9\.]\+\)$/\1\/\2/p')/$str.tar.gz
+for str in $(cabal install -v0 --dry-run cabal-dev-$VERSION | tail +2 | grep -v cabal-dev | cut -d' ' -f1); do
+    wget http://hackage.haskell.org/packages/archive/$(echo $str | sed -ne 's/^\([^ ]\+\)-\([0-9\.]\+\).*$/\1\/\2/p')/$str.tar.gz
     tar xvf $str.tar.gz
     ( cd $str
     cabal configure \
@@ -64,6 +64,7 @@ for str in $(cabal install --dry-run cabal-dev-$VERSION | tail +3 | grep -v caba
         --prefix=$TMP/$PRGNAM-$VERSION/cabal
     cabal build
     cabal install \
+        --force-reinstall \
         --prefix=$TMP/$PRGNAM-$VERSION/cabal \
         --package-db=$PACKAGE_DB
     )
