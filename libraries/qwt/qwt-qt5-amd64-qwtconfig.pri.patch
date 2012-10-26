@@ -1,0 +1,68 @@
+diff -Naur qwt.orig/qwt.pro qwt/qwt.pro
+--- qwt.orig/qwt.pro	2012-10-08 18:05:14.000000000 +0400
++++ qwt/qwt.pro	2012-10-08 20:07:17.557057859 +0400
+@@ -13,8 +13,7 @@
+ CONFIG   += ordered
+ 
+ SUBDIRS = \
+-    src \
+-    textengines
++    src
+ 
+ contains(QWT_CONFIG, QwtDesigner ) {
+    	SUBDIRS += designer 
+diff -Naur qwt.orig/qwtconfig.pri qwt/qwtconfig.pri
+--- qwt.orig/qwtconfig.pri	2012-10-08 18:05:01.000000000 +0400
++++ qwt/qwtconfig.pri	2012-10-08 20:09:05.789058766 +0400
+@@ -16,15 +16,7 @@
+ # Install paths
+ ######################################################################
+ 
+-QWT_INSTALL_PREFIX = $$[QT_INSTALL_PREFIX]
+-
+-unix {
+-    QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION-svn
+-}
+-
+-win32 {
+-    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION-svn
+-}
++QWT_INSTALL_PREFIX = /usr/lib64/qwt-qt5
+ 
+ QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
+ QWT_INSTALL_HEADERS   = $${QWT_INSTALL_PREFIX}/include
+@@ -79,7 +71,7 @@
+ # export a plot to a SVG document
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtSvg
++# QWT_CONFIG     += QwtSvg
+ 
+ ######################################################################
+ # If you want to use a OpenGL plot canvas
+@@ -104,14 +96,14 @@
+ # Otherwise you have to build it from the designer directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtDesigner
++# QWT_CONFIG     += QwtDesigner
+ 
+ ######################################################################
+ # If you want to auto build the examples, enable the line below
+ # Otherwise you have to build them from the examples directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtExamples
++# QWT_CONFIG     += QwtExamples
+ 
+ ######################################################################
+ # The playground is primarily intended for the Qwt development 
+@@ -122,7 +114,7 @@
+ # Otherwise you have to build them from the playground directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtPlayground
++# QWT_CONFIG     += QwtPlayground
+ 
+ ######################################################################
+ # When Qt has been built as framework qmake ( qtAddLibrary ) wants 

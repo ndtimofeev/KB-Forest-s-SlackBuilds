@@ -68,7 +68,11 @@ patch -p1 < $CWD/qwt-add_qwt_rpath-qwt.prf.patch
 #     patch -p1 < $CWD/qwt-fix_const_cast_error.patch
 # fi
 
-patch -p1 < $CWD/qwt${QT_POSTFIX}-qwtconfig.pri.patch
+if [[ "$ARCH" != "x86_64" ]]; then
+    patch -p1 < $CWD/qwt${QT_POSTFIX}-qwtconfig.pri.patch
+else
+    patch -p1 < $CWD/qwt${QT_POSTFIX}-amd64-qwtconfig.pri.patch
+fi
 
 qmake${QT_POSTFIX}
 make $NUMJOBS || make || exit 1
@@ -81,7 +85,7 @@ find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/usr/lib/$QT/mkspecs/features
-( cd $PKG/usr/lib/$QT/mkspecs/features;
+( cd $PKG/usr/lib$LIBDIRSUFFIX/$QT/mkspecs/features;
     ln -sf ../../../${PRGNAM}${QT_POSTFIX}/features/* .
 )
 
