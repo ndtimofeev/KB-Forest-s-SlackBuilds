@@ -61,7 +61,6 @@ if [ -e mkspecs/linux-g++-64/qmake.conf ]; then
     sed -i 's/^\(QMAKE_LIBDIR_OPENGL.*\)$/# \1/' mkspecs/linux-g++-64/qmake.conf
 fi
 
-exit
 export CFLAGS="$SLKCFLAGS"
 export CXXFLAGS="$SLKCFLAGS"
 export OPENSOURCE_CXXFLAGS="$SLKCFLAGS"
