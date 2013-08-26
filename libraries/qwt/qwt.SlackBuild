@@ -49,7 +49,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf ${PRGNAM}${QT_POSTFIX}
-svn co https://qwt.svn.sourceforge.net/svnroot/qwt/trunk/qwt ${PRGNAM}${QT_POSTFIX}
+svn co svn://svn.code.sf.net/p/qwt/code/trunk/qwt ${PRGNAM}${QT_POSTFIX}
 cd ${PRGNAM}${QT_POSTFIX}
 
 # chown -R root:root .
@@ -74,15 +74,15 @@ else
     patch -p1 < $CWD/qwt${QT_POSTFIX}-amd64-qwtconfig.pri.patch
 fi
 
-qmake${QT_POSTFIX}
+qmake${QT_POSTFIX} "CONFIG += debug"
 make $NUMJOBS || make || exit 1
 # \
 #   CFLAGS+="$SLKCFLAGS" \
 #   CXXFLAGS+="$SLKCFLAGS"
 make install INSTALL_ROOT=$PKG
 
-find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+# find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
+#   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/usr/lib/$QT/mkspecs/features
 ( cd $PKG/usr/lib$LIBDIRSUFFIX/$QT/mkspecs/features;

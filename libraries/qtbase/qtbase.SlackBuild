@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PKGNAM=qtbase
-VERSION=${VERSION:-5.0.0beta1}
+VERSION=${VERSION:-5.1.0}
 BUILD=${BUILD:-1}
 
 NUMJOBS=${NUMJOBS:--j7}
@@ -45,9 +45,9 @@ PKG=$TMP/package-${PKGNAM}
 rm -rf $PKG
 mkdir -p $TMP $PKG
 cd $TMP
-rm -rf qtbase-opensource-src-5.0.0-beta1
-tar xvf $CWD/qtbase-opensource-src-5.0.0-beta1.tar.xz 
-cd qtbase-opensource-src-5.0.0-beta1
+rm -rf qtbase-opensource-src-${VERSION}
+tar xvf $CWD/qtbase-opensource-src-${VERSION}.tar.xz
+cd qtbase-opensource-src-${VERSION}
 
 chown -R root:root .
 find . \
@@ -60,6 +60,8 @@ if [ -e mkspecs/linux-g++-64/qmake.conf ]; then
     sed -i 's/^\(QMAKE_LIBDIR_X11.*\)$/# \1/' mkspecs/linux-g++-64/qmake.conf
     sed -i 's/^\(QMAKE_LIBDIR_OPENGL.*\)$/# \1/' mkspecs/linux-g++-64/qmake.conf
 fi
+
+# patch -p1 -i ${CWD}/gcc48.patch
 
 export CFLAGS="$SLKCFLAGS"
 export CXXFLAGS="$SLKCFLAGS"

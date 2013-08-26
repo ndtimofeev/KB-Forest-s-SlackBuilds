@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+        |-----handy-ruler------------------------------------------------------|
+qtwebkit: qtwebkit (Qt WebKit provides a Web browser engine)
+qtwebkit:
+qtwebkit: Qt WebKit Widgets provides facilities for rendering of HyperText
+qtwebkit: Markup Language (HTML), Extensible HyperText Markup Language (XHTML)
+qtwebkit: and Scalable Vector Graphics (SVG) documents, styled using Cascading
+qtwebkit: Style Sheets (CSS) and scripted with JavaScript.
+qtwebkit:
+qtwebkit:
+qtwebkit:
+qtwebkit:
+qtwebkit:
