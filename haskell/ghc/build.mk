@@ -31,149 +31,23 @@ buildFlavour = perf
 #BuildFlavour = unreg
 
 GhcLibWays = v
+V = 0
 
 # -------- 1. A Performance/Distribution build--------------------------------
-
-ifeq "$(BuildFlavour)" "perf"
-
-# perf matches the default settings, repeated here for comparison:
 
 SRC_HC_OPTS     = -O -H64m
 GhcStage1HcOpts = -O -fasm
 GhcStage2HcOpts = -O2 -fasm
 GhcHcOpts       = -Rghc-timing
 GhcLibHcOpts    = -O2
-GhcLibWays     += p
+#GhcLibWays     += p
 SplitObjs          = YES
+DYNAMIC_GHC_PROGRAMS = NO
 HADDOCK_DOCS       = NO
 BUILD_DOCBOOK_HTML = NO
 BUILD_DOCBOOK_PS   = NO
 BUILD_DOCBOOK_PDF  = NO
 
-ifeq "$(PlatformSupportsSharedLibs)" "YES"
-GhcLibWays += dyn
-endif
-
-endif
-
-# -------- A Fast build ------------------------------------------------------
-
-ifeq "$(BuildFlavour)" "quickest"
-
-SRC_HC_OPTS        = -H64m -O0 -fasm
-GhcStage1HcOpts    = -O -fasm
-GhcStage2HcOpts    = -O0 -fasm
-GhcLibHcOpts       = -O0 -fasm
-SplitObjs          = NO
-HADDOCK_DOCS       = NO
-BUILD_DOCBOOK_HTML = NO
-BUILD_DOCBOOK_PS   = NO
-BUILD_DOCBOOK_PDF  = NO
-
-endif
-
-# -------- A Fast build with optimised libs ----------------------------------
-
-ifeq "$(BuildFlavour)" "quick"
-
-SRC_HC_OPTS        = -H64m -O0 -fasm
-GhcStage1HcOpts    = -O -fasm
-GhcStage2HcOpts    = -O0 -fasm
-GhcLibHcOpts       = -O -fasm
-SplitObjs          = NO
-HADDOCK_DOCS       = NO
-BUILD_DOCBOOK_HTML = NO
-BUILD_DOCBOOK_PS   = NO
-BUILD_DOCBOOK_PDF  = NO
-
-endif
-
-# -------- Profile the stage2 compiler ---------------------------------------
-
-ifeq "$(BuildFlavour)" "prof"
-
-SRC_HC_OPTS        = -H64m -O0 -fasm
-GhcStage1HcOpts    = -O -fasm
-GhcStage2HcOpts    = -O -fasm
-GhcLibHcOpts       = -O -fasm
-
-GhcLibWays         += p
-GhcProfiled        = YES
-
-SplitObjs          = NO
-HADDOCK_DOCS       = NO
-BUILD_DOCBOOK_HTML = NO
-BUILD_DOCBOOK_PS   = NO
-BUILD_DOCBOOK_PDF  = NO
-
-endif
-
-
-# -------- A Development build (stage 1) -------------------------------------
-
-ifeq "$(BuildFlavour)" "devel1"
-
-SRC_HC_OPTS        = -H64m -O -fasm
-GhcLibHcOpts       = -O -dcore-lint
-GhcStage1HcOpts    = -Rghc-timing -O0 -DDEBUG
-GhcStage2HcOpts    = -Rghc-timing -O -fasm
-SplitObjs          = NO
-HADDOCK_DOCS       = NO
-BUILD_DOCBOOK_HTML = NO
-BUILD_DOCBOOK_PS   = NO
-BUILD_DOCBOOK_PDF  = NO
-LAX_DEPENDENCIES   = YES
-
-endif
-
-# -------- A Development build (stage 2) -------------------------------------
-
-ifeq "$(BuildFlavour)" "devel2"
-
-SRC_HC_OPTS        = -H64m -O -fasm
-GhcLibHcOpts       = -O -dcore-lint
-GhcStage1HcOpts    = -Rghc-timing -O -fasm
-GhcStage2HcOpts    = -Rghc-timing -O0 -DDEBUG
-SplitObjs          = NO
-HADDOCK_DOCS       = NO
-BUILD_DOCBOOK_HTML = NO
-BUILD_DOCBOOK_PS   = NO
-BUILD_DOCBOOK_PDF  = NO
-LAX_DEPENDENCIES   = YES
-
-# After stage 1 and the libraries have been built, you can uncomment this line:
-
-# stage=2
-
-# Then stage 1 will not be touched by the build system, until
-# you comment the line again.  This is a useful trick for when you're
-# working on stage 2 and want to freeze stage 1 and the libraries for
-# a while.
-
-endif
-
-# -------- A Unregisterised build) -------------------------------------------
-
-ifeq "$(BuildFlavour)" "unreg"
-
-GhcUnregisterised    = YES
-GhcWithNativeCodeGen = NO
-
-SRC_HC_OPTS          = -O -H64m
-GhcStage1HcOpts      = -O
-GhcStage2HcOpts      = -O2
-GhcHcOpts            = -Rghc-timing
-GhcLibHcOpts         = -O2
-SplitObjs            = NO
-HADDOCK_DOCS         = NO
-BUILD_DOCBOOK_HTML   = NO
-BUILD_DOCBOOK_PS     = NO
-BUILD_DOCBOOK_PDF    = NO
-
-endif
-
-# -----------------------------------------------------------------------------
-# Other settings that might be useful
 
 # NoFib settings
 NoFibWays =

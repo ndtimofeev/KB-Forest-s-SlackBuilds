@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PRGNAM=cabal-install
-VERSION=${VERSION:-1.16.0.2}
+VERSION=${VERSION:-1.20.0.3}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_ndt}
 
@@ -36,7 +36,7 @@ else
   LIBDIRSUFFIX=""
 fi
 
-set -e
+# set -e
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -45,12 +45,13 @@ rm -rf $SRCNAM-$VERSION
 tar xvf $CWD/$SRCNAM-$VERSION.tar.gz
 cd $SRCNAM-$VERSION
 # chown -R root:root .
-find . \
- \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) \
- -exec chmod 755 {} \; -o \
- \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) \
- -exec chmod 644 {} \;
+# find . \
+#  \( -perm 777 -o -perm 775 -o -perm 711 -o -perm 555 -o -perm 511 \) \
+#  -exec chmod 755 {} \; -o \
+#  \( -perm 666 -o -perm 664 -o -perm 600 -o -perm 444 -o -perm 440 -o -perm 400 \) \
+#  -exec chmod 644 {} \;
 
+# sed -i "s/CABAL_VER=\"[^\"]\+\"/CABAL_VER=\"1.18.0\"/p" ./bootstrap.sh
 chmod +x ./bootstrap.sh
 ghc-pkg init "$(pwd)/cabal/package-conf.d"
 
@@ -58,16 +59,19 @@ CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 EXTRA_CONFIGURE_OPTS="--package-db=$(pwd)/cabal/package-conf.d/" \
 PREFIX="$(pwd)/cabal" \
-    ./bootstrap.sh
+    ./bootstrap.sh --user --no-doc
 
-runghc Setup.hs configure \
+LOCAL_CABAL=$(pwd)/cabal/bin/cabal
+
+$LOCAL_CABAL clean
+$LOCAL_CABAL configure \
   --prefix=/usr \
   --package-db="$(pwd)/cabal/package-conf.d/" \
   --docdir=/usr/doc/$PRGNAM-$VERSION
 
-runghc Setup.hs build
-runghc Setup.hs haddock
-runghc Setup.hs copy --destdir=$PKG
+$LOCAL_CABAL  build
+$LOCAL_CABAL  haddock
+$LOCAL_CABAL  copy --destdir=$PKG
 
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true

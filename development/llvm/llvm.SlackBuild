@@ -24,7 +24,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PKGNAM=llvm
-VERSION=3.2
+VERSION=3.4
 BUILD=${BUILD:-1}
 
 NUMJOBS=${NUMJOBS:-" -j7 "}
@@ -56,26 +56,69 @@ else
 fi
 
 CLANG=${CLANG:-yes}
+# CLANG_TOOLS=${CLANG_TOOLS:-yes}
+# LLDB=${LLDB:-yes}
+POLLY=${POLLY:-yes}
+OPTIONS=${OPTIONS:-""}
+
+set -e
 
 rm -rf $PKG
 mkdir -p $TMP $PKG
 cd $TMP
-rm -rf $PKGNAM-${VERSION}.src
+rm -rf $PKGNAM-${VERSION}
 tar xvf $CWD/$PKGNAM-$VERSION.src.tar.gz
 
-if [ "$CLANG" = "no" ]; then
-  cd $PKGNAM-${VERSION}.src
-else
-  cd $PKGNAM-${VERSION}.src/tools
-  rm -rf clang clang-${VERSION}.src
-  tar xvf $CWD/clang-$VERSION.src.tar.gz
-  mv clang-${VERSION}.src clang
-  cd ../
+if [[ $POLLY = "yes" ]]; then
+  CLOOG_INSTALL=${CLOOG_INSTALL:-$TMP/$PKGNAM-$VERSION/tools/cloog_install}
+  OPTIONS="$OPTIONS --enable-polly --with-cloog=$CLOOG_INSTALL --with-isl=$CLOOG_INSTALL"
 
-  # clang fixes for slackware
-  # No longer needed as of llvm/clang 3.0?
-  #patch -p1 -d tools/clang -i $CWD/clang-slackware.diff
+  ( cd $PKGNAM-$VERSION/tools
+
+    rm -rf polly polly-$VERSION
+    tar xvf $CWD/polly-$VERSION.src.tar.gz
+    mv polly-$VERSION polly
+
+    (
+      polly/utils/checkout_cloog.sh cloog_src
+      mkdir $CLOOG_INSTALL
+      echo $CLOOG_INSTALL
+      cd cloog_src
+      ./configure --prefix=$CLOOG_INSTALL --enable-static --disable-shared
+      make $NUMJOBS
+      make install
+    )
+  )
+
+else
+  OPTIONS="$OPTIONS --disable-polly"
 fi
+
+if [[ $CLANG = "yes" ]]; then
+  ( cd $PKGNAM-$VERSION/tools
+
+    rm -rf clang clang-$VERSION
+    tar xvf $CWD/clang-$VERSION.src.tar.gz
+    mv clang-$VERSION clang
+
+    rm -rf compiler-rt compiler-rt-$VERSION
+    tar xvf $CWD/compiler-rt-$VERSION.src.tar.gz
+    mv compiler-rt-$VERSION compiler-rt
+
+  )
+fi
+
+# if [[ $LLDB = "yes" && $CLANG = "yes" ]]; then
+#   ( cd $PKGNAM-$VERSION/tools
+
+#     rm -rf lldb lldb-$VERSION
+#     tar xvf $CWD/lldb-$VERSION.src.tar.gz
+#     mv lldb-$VERSION lldb
+
+#   )
+# fi
+
+cd $PKGNAM-$VERSION
 
 chown -R root:root .
 chmod -R u+w,go+r-w,a-s .
@@ -87,17 +130,27 @@ CINC="$CINC:$(echo ${GCCDIR})/include-fixed/"
 
 # --mandir doesn't work currently
 # need to disable assertions to make llvm thread-safe
+
+# CC=gcc \
+# CXX=g++ \
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 ./configure \
+  $OPTIONS \
   --prefix=/usr \
   --libdir=/usr/lib$LIBDIRSUFFIX \
   --sysconfdir=/etc \
   --localstatedir=/var \
   --mandir=/usr/man \
-  --enable-optimized \
   --disable-assertions \
+  --disable-doc \
+  --enable-optimized \
+  --enable-shared \
   --enable-pic \
+  --enable-cxx11 \
+  --enable-libffi \
+  --enable-bindings=none \
+  --enable-targets="x86,x86_64,arm,r600" \
   --with-c-include-dirs=$CINC \
   --build=$ARCH-slackware-linux \
   --host=$ARCH-slackware-linux || exit 1
@@ -106,7 +159,7 @@ CXXFLAGS="$SLKCFLAGS" \
 sed -i "s|\$(PROJ_prefix)/lib|\$(PROJ_prefix)/lib$LIBDIRSUFFIX|" \
   Makefile.config
 
-if [ "$CLANG" != "no" ]; then
+if [[ $CLANG = "yes" ]]; then
   sed -i "s|\$(PROJ_prefix)/lib|\$(PROJ_prefix)/lib$LIBDIRSUFFIX|" \
     tools/clang/lib/Headers/Makefile
 fi
@@ -114,7 +167,7 @@ fi
 make $NUMJOBS || make || exit 1
 make install DESTDIR=$PKG || exit 1
 
-if [ "$CLANG" != "no" ]; then
+if [[ $CLANG = "yes" ]]; then
   # install clang-static-analyzer
   mkdir -p $PKG/usr/lib$LIBDIRSUFFIX/clang-analyzer
   cp -pr tools/clang/tools/scan-{build,view} \
@@ -159,9 +212,9 @@ cp -a CREDITS* LICENSE* README* $PKG/usr/doc/$PKGNAM-$VERSION
 mv $PKG/usr/docs/llvm/* $PKG/usr/doc/$PKGNAM-$VERSION
 rm -rf $PKG/usr/docs
 
-if [ "$CLANG" != "no" ]; then
+if [[ $CLANG = "yes" ]]; then
   mkdir $PKG/usr/doc/$PKGNAM-$VERSION/clang
-  cp -a tools/clang/{INSTALL,NOTES,README,TODO}* \
+  cp -a tools/clang/{INSTALL,NOTES,README}* \
     $PKG/usr/doc/$PKGNAM-$VERSION/clang
 fi
 
@@ -170,4 +223,3 @@ cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $TMP/$PKGNAM-$VERSION-$ARCH-$BUILD.txz
-

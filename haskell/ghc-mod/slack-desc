@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+ghc-mod: ghc-mod (Happy Haskell programming on Emacs/Vim)
+ghc-mod:
+ghc-mod: This packages includes Elisp files and a Haskell command, "ghc-mod".
+ghc-mod: "ghc*.el" enable completion of Haskell symbols on Emacs. Flymake is
+ghc-mod: also integrated. "ghc-mod" is a backend of "ghc*.el". It lists up all
+ghc-mod: installed modules or extracts names of functions, classes, and data
+ghc-mod: declarations. To use "ghc-mod" on Vim, see
+ghc-mod: <https://github.com/eagletmt/ghcmod-vim> or
+ghc-mod: <https://github.com/scrooloose/syntastic>
+ghc-mod:
+ghc-mod:

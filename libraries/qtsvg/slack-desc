@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+     |-----handy-ruler------------------------------------------------------|
+qtsvg: qtsvg (Qt SVG provides classes for rendering SVG files)
+qtsvg:
+qtsvg: Scalable Vector Graphics (SVG) is an XML-based language for describing
+qtsvg: two-dimensional vector graphics. Qt provides classes for rendering and
+qtsvg: displaying SVG drawings in widgets and on other paint devices.
+qtsvg:
+qtsvg:
+qtsvg:
+qtsvg:
+qtsvg:
+qtsvg:

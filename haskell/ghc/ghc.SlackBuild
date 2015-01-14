@@ -3,7 +3,7 @@
 # Slackware build script for ghc
 
 PRGNAM=ghc
-VERSION=${VERSION:-7.6.1}
+VERSION=${VERSION:-7.8.2}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_ndt}
 
@@ -43,7 +43,7 @@ set -e
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION-src.tar.bz2
+tar xvf $CWD/$PRGNAM-$VERSION-src.tar.xz
 cd $PRGNAM-$VERSION
 # chown -R root:root .
 find . \
@@ -60,7 +60,8 @@ CXXFLAGS="$SLKCFLAGS" \
   --prefix=/usr \
   --mandir=/usr/man \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --libdir=/usr/lib${LIBDIRSUFFIX}
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --with-system-libffi
 
 make
 make install DESTDIR=$PKG
